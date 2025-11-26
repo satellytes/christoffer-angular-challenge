@@ -164,6 +164,12 @@
           {{ task.status === 'open' ? 'Mark as Completed' : 'Reopen Task' }}
         </button>
       </mat-card-actions>
+
+      <mat-divider></mat-divider>
+
+      <div class="comments-section">
+        <app-task-comments [taskId]="task.id"></app-task-comments>
+      </div>
     </mat-card>
   } @else {
     <mat-card class="error-card">

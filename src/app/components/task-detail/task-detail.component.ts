@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TaskService } from '../../services/task.service';
 import { Task, PRIORITY_CONFIG, STATUS_CONFIG } from '../../models/task.model';
 import { TaskFormDialogComponent } from '../task-form-dialog/task-form-dialog.component';
+import { TaskCommentsComponent } from '../task-comments/task-comments.component';
 
 /**
  * Component displaying detailed view of a single task
@@ -30,6 +31,7 @@ import { TaskFormDialogComponent } from '../task-form-dialog/task-form-dialog.co
     MatIconModule,
     MatChipsModule,
     MatDividerModule,
+    TaskCommentsComponent,
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss',

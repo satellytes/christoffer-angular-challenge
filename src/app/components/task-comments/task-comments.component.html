@@ -1,0 +1,81 @@
+<div class="comments-container">
+  <div class="comments-header">
+    <h2 class="section-title">
+      <mat-icon>comment</mat-icon>
+      Comments
+      <span class="comment-count">({{ commentCount() }})</span>
+    </h2>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="comment-form" *ngIf="true">
+    <mat-form-field appearance="outline" class="author-field">
+      <mat-label>Your Name</mat-label>
+      <input
+        matInput
+        placeholder="Enter your name"
+        [ngModel]="commentFormService.author()"
+        (ngModelChange)="commentFormService.updateAuthor($event)"
+        maxlength="50"
+      />
+      <mat-icon matPrefix>person</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="content-field">
+      <mat-label>Add a comment</mat-label>
+      <textarea
+        matInput
+        placeholder="Share your thoughts..."
+        [ngModel]="commentFormService.content()"
+        (ngModelChange)="commentFormService.updateContent($event)"
+        rows="3"
+        maxlength="500"
+      ></textarea>
+      <mat-icon matPrefix>edit</mat-icon>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addComment()"
+      class="submit-button"
+    >
+      <mat-icon>send</mat-icon>
+      Post Comment
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Comments List -->
+  <div class="comments-list">
+    @if (hasComments()) {
+      @for (comment of sortedComments(); track trackByCommentId($index, comment)) {
+        <mat-card class="comment-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>account_circle</mat-icon>
+            <mat-card-title>{{ comment.author }}</mat-card-title>
+            <mat-card-subtitle>{{ getRelativeTime(comment.createdAt) }}</mat-card-subtitle>
+            <button
+              mat-icon-button
+              class="delete-button"
+              (click)="deleteComment(comment.id)"
+              matTooltip="Delete comment"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="comment-text">{{ comment.content }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    } @else {
+      <div class="no-comments">
+        <mat-icon class="no-comments-icon">chat_bubble_outline</mat-icon>
+        <p>No comments yet. Be the first to comment!</p>
+      </div>
+    }
+  </div>
+</div>
