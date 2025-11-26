@@ -1,0 +1,100 @@
+<mat-card
+  class="task-card"
+  [class.completed]="task().status === 'completed'"
+  [class.overdue]="isOverdue()"
+  (click)="onCardClick($event)"
+  (keydown)="onKeyDown($event)"
+  tabindex="0"
+  role="button"
+  [attr.aria-label]="'Task: ' + task().title + ', Priority: ' + priorityConfig().label + ', Status: ' + statusConfig().label"
+>
+  <mat-card-header>
+    <div class="header-content">
+      <div class="title-section">
+        <h3 class="task-title">{{ task().title }}</h3>
+        <div class="badges">
+          <mat-chip
+            class="priority-chip"
+            [style.background-color]="priorityConfig().color"
+            [attr.aria-label]="'Priority: ' + priorityConfig().label"
+          >
+            <mat-icon matChipAvatar>{{ priorityConfig().icon }}</mat-icon>
+            {{ priorityConfig().label }}
+          </mat-chip>
+          <mat-chip
+            class="status-chip"
+            [style.background-color]="statusConfig().color"
+            [attr.aria-label]="'Status: ' + statusConfig().label"
+          >
+            <mat-icon matChipAvatar>{{ statusConfig().icon }}</mat-icon>
+            {{ statusConfig().label }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="task-description">
+      {{ task().description }}
+    </p>
+
+    <div class="task-meta">
+      <div
+        class="due-date"
+        [class.overdue]="isOverdue()"
+        [attr.aria-label]="'Due date: ' + formattedDueDate()"
+      >
+        <mat-icon>event</mat-icon>
+        <span>{{ dueDateLabel() }}</span>
+      </div>
+      <div class="created-date" [attr.aria-label]="'Created: ' + task().createdAt.toLocaleDateString()">
+        <mat-icon>schedule</mat-icon>
+        <span>Created {{ task().createdAt.toLocaleDateString() }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      mat-icon-button
+      (click)="onToggleStatus($event)"
+      [attr.aria-label]="task().status === 'open' ? 'Mark as completed' : 'Mark as open'"
+      [matTooltip]="task().status === 'open' ? 'Mark as completed' : 'Mark as open'"
+    >
+      <mat-icon>
+        {{ task().status === 'open' ? 'check_circle_outline' : 'undo' }}
+      </mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      (click)="onEdit($event)"
+      [attr.aria-label]="'Edit task'"
+      matTooltip="Edit task"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="warn"
+      (click)="onDelete($event)"
+      [attr.aria-label]="'Delete task'"
+      matTooltip="Delete task"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <span class="spacer"></span>
+
+    <button
+      mat-icon-button
+      (click)="onCardClick($event)"
+      [attr.aria-label]="'View task details'"
+      matTooltip="View details"
+    >
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

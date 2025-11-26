@@ -1,0 +1,181 @@
+<div class="task-detail-container">
+  @if (task(); as task) {
+    <div class="action-bar">
+      <button
+        mat-icon-button
+        (click)="goBack()"
+        [attr.aria-label]="'Go back to task list'"
+        class="back-button"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openEditDialog()"
+        [attr.aria-label]="'Edit task'"
+      >
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteTask()"
+        [attr.aria-label]="'Delete task'"
+      >
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
+
+    <mat-card class="detail-card">
+      <mat-card-header>
+        <div class="header-content">
+          <h1 class="task-title">{{ task.title }}</h1>
+          <div class="badges">
+            <mat-chip
+              class="priority-chip"
+              [style.background-color]="priorityConfig()?.color"
+              [attr.aria-label]="'Priority: ' + priorityConfig()?.label"
+            >
+              <mat-icon matChipAvatar>{{ priorityConfig()?.icon }}</mat-icon>
+              {{ priorityConfig()?.label }} Priority
+            </mat-chip>
+            <mat-chip
+              class="status-chip"
+              [style.background-color]="statusConfig()?.color"
+              [attr.aria-label]="'Status: ' + statusConfig()?.label"
+            >
+              <mat-icon matChipAvatar>{{ statusConfig()?.icon }}</mat-icon>
+              {{ statusConfig()?.label }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <section class="description-section">
+          <h2 class="section-title">
+            <mat-icon>description</mat-icon>
+            Description
+          </h2>
+          <p class="description-text">{{ task.description }}</p>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <section class="details-section">
+          <h2 class="section-title">
+            <mat-icon>info</mat-icon>
+            Details
+          </h2>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">
+                <mat-icon>event</mat-icon>
+                <span>Due Date</span>
+              </div>
+              <div
+                class="detail-value"
+                [class.overdue]="isOverdue()"
+                [attr.aria-label]="'Due date: ' + formattedDueDate()"
+              >
+                {{ formattedDueDate() }}
+                @if (isOverdue()) {
+                  <mat-chip class="overdue-chip">
+                    <mat-icon matChipAvatar>warning</mat-icon>
+                    Overdue
+                  </mat-chip>
+                } @else if (daysUntilDue() === 0) {
+                  <mat-chip class="today-chip">
+                    <mat-icon matChipAvatar>today</mat-icon>
+                    Due Today
+                  </mat-chip>
+                } @else if (daysUntilDue() === 1) {
+                  <mat-chip class="soon-chip">
+                    <mat-icon matChipAvatar>schedule</mat-icon>
+                    Due Tomorrow
+                  </mat-chip>
+                } @else if (daysUntilDue() > 0 && daysUntilDue() <= 7) {
+                  <mat-chip class="soon-chip">
+                    <mat-icon matChipAvatar>schedule</mat-icon>
+                    Due in {{ daysUntilDue() }} days
+                  </mat-chip>
+                }
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                <mat-icon>schedule</mat-icon>
+                <span>Created</span>
+              </div>
+              <div class="detail-value" [attr.aria-label]="'Created: ' + formattedCreatedDate()">
+                {{ formattedCreatedDate() }}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                <mat-icon>flag</mat-icon>
+                <span>Priority</span>
+              </div>
+              <div class="detail-value">
+                <mat-icon [style.color]="priorityConfig()?.color">
+                  {{ priorityConfig()?.icon }}
+                </mat-icon>
+                {{ priorityConfig()?.label }}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                <mat-icon>check_circle</mat-icon>
+                <span>Status</span>
+              </div>
+              <div class="detail-value">
+                <mat-icon [style.color]="statusConfig()?.color">
+                  {{ statusConfig()?.icon }}
+                </mat-icon>
+                {{ statusConfig()?.label }}
+              </div>
+            </div>
+          </div>
+        </section>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="toggleStatus()"
+          [attr.aria-label]="task.status === 'open' ? 'Mark as completed' : 'Mark as open'"
+        >
+          <mat-icon>
+            {{ task.status === 'open' ? 'check_circle' : 'undo' }}
+          </mat-icon>
+          {{ task.status === 'open' ? 'Mark as Completed' : 'Reopen Task' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h2>Task Not Found</h2>
+        <p>The task you're looking for doesn't exist or has been deleted.</p>
+        <button mat-raised-button color="primary" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Go Back
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

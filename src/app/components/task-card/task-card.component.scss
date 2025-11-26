@@ -1,0 +1,141 @@
+.task-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:focus {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  &.completed {
+    opacity: 0.8;
+    background-color: rgba(76, 175, 80, 0.05);
+
+    .task-title {
+      text-decoration: line-through;
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &.overdue {
+    border-left: 4px solid #f44336;
+  }
+
+  mat-card-header {
+    padding: 16px 16px 0 16px;
+
+    .header-content {
+      width: 100%;
+
+      .title-section {
+        .task-title {
+          font-size: 20px;
+          font-weight: 500;
+          margin: 0 0 12px 0;
+          color: rgba(0, 0, 0, 0.87);
+          line-height: 1.3;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+
+        .badges {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+
+          .priority-chip,
+          .status-chip {
+            color: white;
+            font-weight: 500;
+            font-size: 12px;
+            height: 28px;
+
+            mat-icon {
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    flex: 1;
+    padding: 16px;
+
+    .task-description {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(0, 0, 0, 0.6);
+      margin: 0 0 16px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .task-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .due-date,
+      .created-date {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.6);
+
+        mat-icon {
+          font-size: 18px;
+          height: 18px;
+          width: 18px;
+        }
+      }
+
+      .due-date {
+        &.overdue {
+          color: #f44336;
+          font-weight: 500;
+
+          mat-icon {
+            color: #f44336;
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: 8px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+    .spacer {
+      flex: 1;
+    }
+
+    button {
+      mat-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+  }
+}

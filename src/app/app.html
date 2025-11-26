@@ -1,0 +1,95 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <button
+    mat-icon-button
+    class="menu-button"
+    [attr.aria-label]="'Open navigation menu'"
+    (click)="toggleSidenav()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <a routerLink="/" class="app-title" [attr.aria-label]="'Go to home page'">
+    <mat-icon class="app-icon">task_alt</mat-icon>
+    <span>Task Manager</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <div class="stats-chips">
+    <mat-chip class="stat-chip open-chip" [attr.aria-label]="'Open tasks: ' + stats().open">
+      <mat-icon matChipAvatar>radio_button_unchecked</mat-icon>
+      {{ stats().open }} Open
+    </mat-chip>
+    <mat-chip class="stat-chip completed-chip" [attr.aria-label]="'Completed tasks: ' + stats().completed">
+      <mat-icon matChipAvatar>check_circle</mat-icon>
+      {{ stats().completed }} Completed
+    </mat-chip>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #sidenav
+    [mode]="sidenavMode()"
+    [opened]="sidenavOpened()"
+    class="sidenav"
+    role="navigation"
+    [attr.aria-label]="'Navigation sidebar'"
+  >
+    <mat-nav-list>
+      <h3 mat-subheader>Navigation</h3>
+      <a
+        mat-list-item
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeSidenavOnMobile()"
+        [attr.aria-label]="'Navigate to all tasks'"
+      >
+        <mat-icon matListItemIcon>list</mat-icon>
+        <span matListItemTitle>All Tasks</span>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <h3 mat-subheader>Quick Filters</h3>
+      <a
+        mat-list-item
+        [class.active]="isHighPriorityFilterActive()"
+        (click)="applyQuickFilter('high-priority'); closeSidenavOnMobile()"
+        [attr.aria-label]="'Filter by high priority tasks'"
+        [attr.aria-pressed]="isHighPriorityFilterActive()"
+      >
+        <mat-icon matListItemIcon style="color: #f44336">arrow_upward</mat-icon>
+        <span matListItemTitle>High Priority</span>
+        <span matListItemMeta class="count-badge">{{ stats().highPriority }}</span>
+      </a>
+      <a
+        mat-list-item
+        [class.active]="isOpenFilterActive()"
+        (click)="applyQuickFilter('open'); closeSidenavOnMobile()"
+        [attr.aria-label]="'Filter by open tasks'"
+        [attr.aria-pressed]="isOpenFilterActive()"
+      >
+        <mat-icon matListItemIcon style="color: #2196f3">radio_button_unchecked</mat-icon>
+        <span matListItemTitle>Open</span>
+        <span matListItemMeta class="count-badge">{{ stats().open }}</span>
+      </a>
+      <a
+        mat-list-item
+        [class.active]="isCompletedFilterActive()"
+        (click)="applyQuickFilter('completed'); closeSidenavOnMobile()"
+        [attr.aria-label]="'Filter by completed tasks'"
+        [attr.aria-pressed]="isCompletedFilterActive()"
+      >
+        <mat-icon matListItemIcon style="color: #4caf50">check_circle</mat-icon>
+        <span matListItemTitle>Completed</span>
+        <span matListItemMeta class="count-badge">{{ stats().completed }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

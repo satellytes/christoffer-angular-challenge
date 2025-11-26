@@ -1,0 +1,159 @@
+<div class="task-list-container">
+  <div class="header-section">
+    <h1 class="page-title">Tasks</h1>
+
+    <!-- Search Bar -->
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-label>Search tasks...</mat-label>
+      <input
+        matInput
+        type="text"
+        [ngModel]="searchTermSignal()"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search by title or description"
+        [attr.aria-label]="'Search tasks by title or description'"
+      />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchTermSignal()) {
+        <button
+          matSuffix
+          mat-icon-button
+          (click)="onSearchChange('')"
+          [attr.aria-label]="'Clear search'"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <!-- Filter and Sort Controls -->
+    <div class="controls-section">
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label">Priority:</label>
+          <div class="filter-chips">
+            @for (priority of priorities; track priority) {
+              <mat-chip
+                [class.selected]="isPrioritySelected(priority)"
+                (click)="togglePriorityFilter(priority)"
+                [attr.aria-label]="'Filter by ' + priorityConfig[priority].label + ' priority'"
+                [attr.aria-pressed]="isPrioritySelected(priority)"
+              >
+                <mat-icon matChipAvatar [style.color]="priorityConfig[priority].color">
+                  {{ priorityConfig[priority].icon }}
+                </mat-icon>
+                {{ priorityConfig[priority].label }}
+              </mat-chip>
+            }
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Status:</label>
+          <div class="filter-chips">
+            @for (status of statuses; track status) {
+              <mat-chip
+                [class.selected]="isStatusSelected(status)"
+                (click)="toggleStatusFilter(status)"
+                [attr.aria-label]="'Filter by ' + statusConfig[status].label + ' status'"
+                [attr.aria-pressed]="isStatusSelected(status)"
+              >
+                <mat-icon matChipAvatar [style.color]="statusConfig[status].color">
+                  {{ statusConfig[status].icon }}
+                </mat-icon>
+                {{ statusConfig[status].label }}
+              </mat-chip>
+            }
+          </div>
+        </div>
+
+        @if (hasActiveFilter()) {
+          <button
+            mat-stroked-button
+            color="accent"
+            (click)="clearFilters()"
+            class="clear-filters-btn"
+            [attr.aria-label]="'Clear all filters'"
+          >
+            <mat-icon>clear_all</mat-icon>
+            Clear Filters
+          </button>
+        }
+      </div>
+
+      <div class="sort-controls">
+        <mat-form-field class="sort-field" appearance="outline">
+          <mat-label>Sort by</mat-label>
+          <mat-select
+            [ngModel]="sortFieldSignal()"
+            (ngModelChange)="sortFieldSignal.set($event); onSortChange()"
+            [attr.aria-label]="'Sort tasks by field'"
+          >
+            @for (field of sortFields; track field.value) {
+              <mat-option [value]="field.value">{{ field.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-icon-button
+          (click)="toggleSortDirection()"
+          [attr.aria-label]="
+            'Sort direction: ' + (sortDirectionSignal() === 'asc' ? 'Ascending' : 'Descending')
+          "
+          class="sort-direction-btn"
+        >
+          <mat-icon>
+            {{ sortDirectionSignal() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+          </mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task List -->
+  <div class="tasks-grid" role="list" [attr.aria-label]="'List of tasks'">
+    @if (isEmpty()) {
+      <mat-card class="empty-state">
+        <mat-card-content>
+          <mat-icon class="empty-icon">assignment</mat-icon>
+          @if (hasActiveFilter()) {
+            <h2>No tasks found</h2>
+            <p>No tasks match your current filters. Try adjusting your search criteria.</p>
+            <button mat-raised-button color="primary" (click)="clearFilters()">
+              Clear Filters
+            </button>
+          } @else {
+            <h2>No tasks yet</h2>
+            <p>Get started by creating your first task!</p>
+            <button mat-raised-button color="primary" (click)="openCreateDialog()">
+              <mat-icon>add</mat-icon>
+              Create Task
+            </button>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      @for (task of tasks(); track task.id) {
+        <app-task-card
+          [task]="task"
+          (taskClick)="viewTaskDetail($event)"
+          (taskDeleted)="onTaskDeleted($event)"
+          (taskStatusToggled)="onTaskStatusToggled($event)"
+          role="listitem"
+        ></app-task-card>
+      }
+    }
+  </div>
+
+  <!-- Floating Action Button -->
+  <button
+    mat-fab
+    color="primary"
+    class="fab"
+    (click)="openCreateDialog()"
+    [attr.aria-label]="'Create new task'"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

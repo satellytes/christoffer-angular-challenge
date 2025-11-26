@@ -1,0 +1,138 @@
+<h2 mat-dialog-title>
+  <mat-icon>{{ isEditMode() ? 'edit' : 'add' }}</mat-icon>
+  {{ isEditMode() ? 'Edit Task' : 'Create New Task' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="taskForm" class="task-form">
+    <!-- Title Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input
+        matInput
+        formControlName="title"
+        placeholder="Enter task title"
+        required
+        [attr.aria-label]="'Task title'"
+        [attr.aria-required]="true"
+      />
+      <mat-icon matPrefix>title</mat-icon>
+      @if (taskForm.get('title')?.touched && taskForm.get('title')?.invalid) {
+        <mat-error>{{ getErrorMessage('title') }}</mat-error>
+      }
+      <mat-hint>Max 200 characters</mat-hint>
+    </mat-form-field>
+
+    <!-- Description Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Enter task description"
+        rows="5"
+        required
+        [attr.aria-label]="'Task description'"
+        [attr.aria-required]="true"
+      ></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      @if (taskForm.get('description')?.touched && taskForm.get('description')?.invalid) {
+        <mat-error>{{ getErrorMessage('description') }}</mat-error>
+      }
+      <mat-hint>Max 2000 characters</mat-hint>
+    </mat-form-field>
+
+    <!-- Due Date Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Due Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="dueDate"
+        [min]="minDate"
+        required
+        [attr.aria-label]="'Due date'"
+        [attr.aria-required]="true"
+      />
+      <mat-icon matPrefix>event</mat-icon>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.invalid) {
+        <mat-error>{{ getErrorMessage('dueDate') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Priority and Status Row -->
+    <div class="form-row">
+      <!-- Priority Field -->
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Priority</mat-label>
+        <mat-select
+          formControlName="priority"
+          required
+          [attr.aria-label]="'Task priority'"
+          [attr.aria-required]="true"
+        >
+          @for (priority of priorities; track priority.value) {
+            <mat-option [value]="priority.value">
+              <mat-icon [style.color]="priority.config.color" class="option-icon">
+                {{ priority.config.icon }}
+              </mat-icon>
+              {{ priority.config.label }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>flag</mat-icon>
+        @if (taskForm.get('priority')?.touched && taskForm.get('priority')?.invalid) {
+          <mat-error>{{ getErrorMessage('priority') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Status Field -->
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Status</mat-label>
+        <mat-select
+          formControlName="status"
+          required
+          [attr.aria-label]="'Task status'"
+          [attr.aria-required]="true"
+        >
+          @for (status of statuses; track status.value) {
+            <mat-option [value]="status.value">
+              <mat-icon [style.color]="status.config.color" class="option-icon">
+                {{ status.config.icon }}
+              </mat-icon>
+              {{ status.config.label }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>check_circle</mat-icon>
+        @if (taskForm.get('status')?.touched && taskForm.get('status')?.invalid) {
+          <mat-error>{{ getErrorMessage('status') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    type="button"
+    (click)="onCancel()"
+    [attr.aria-label]="'Cancel'"
+  >
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    (click)="onSubmit()"
+    [disabled]="taskForm.invalid"
+    [attr.aria-label]="isEditMode() ? 'Save changes' : 'Create task'"
+  >
+    <mat-icon>{{ isEditMode() ? 'save' : 'add' }}</mat-icon>
+    {{ isEditMode() ? 'Save Changes' : 'Create Task' }}
+  </button>
+</mat-dialog-actions>
