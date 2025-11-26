@@ -1,0 +1,111 @@
+.comments-container {
+  margin-top: 24px;
+
+  .comments-header {
+    margin-bottom: 16px;
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0;
+
+      mat-icon {
+        color: #666;
+      }
+
+      .comment-count {
+        color: #999;
+        font-size: 16px;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .comment-form {
+    padding: 20px 0;
+
+    .author-field {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .content-field {
+      width: 100%;
+      margin-bottom: 12px;
+
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+    }
+
+    .submit-button {
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .comments-list {
+    padding: 20px 0;
+
+    .comment-card {
+      margin-bottom: 16px;
+      position: relative;
+
+      mat-card-header {
+        padding-bottom: 8px;
+
+        mat-icon[mat-card-avatar] {
+          font-size: 40px;
+          width: 40px;
+          height: 40px;
+          color: #666;
+        }
+
+        .delete-button {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          color: #999;
+
+          &:hover {
+            color: #f44336;
+          }
+        }
+      }
+
+      mat-card-content {
+        .comment-text {
+          margin: 0;
+          color: #333;
+          line-height: 1.5;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+      }
+    }
+
+    .no-comments {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+
+      .no-comments-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        color: #ccc;
+      }
+
+      p {
+        margin: 0;
+        font-size: 16px;
+      }
+    }
+  }
+}

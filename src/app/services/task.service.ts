@@ -6,6 +6,7 @@ import {
   TaskFilter,
   TaskSort,
   PRIORITY_CONFIG,
+  Comment,
 } from '../models/task.model';
 
 /**
@@ -165,6 +166,24 @@ export class TaskService {
       },
     ];
 
+    // Add sample comments to first task
+    sampleTasks[0].comments = [
+      {
+        id: this.generateCommentId(),
+        taskId: sampleTasks[0].id,
+        author: 'John Doe',
+        content: 'Started working on this. Will have initial draft by EOD.',
+        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      },
+      {
+        id: this.generateCommentId(),
+        taskId: sampleTasks[0].id,
+        author: 'Jane Smith',
+        content: 'Make sure to include API documentation as well.',
+        createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+      },
+    ];
+
     this.tasksSignal.set(sampleTasks);
   }
 
@@ -241,6 +260,72 @@ export class TaskService {
     );
 
     return updatedTask;
+  }
+
+  /**
+   * Add a comment to a task
+   */
+  addComment(taskId: string, author: string, content: string): Comment | null {
+    let newComment: any = null;
+
+    this.tasksSignal.update((tasks) =>
+      tasks.map((task) => {
+        if (task.id === taskId) {
+          newComment = {
+            id: this.generateCommentId(),
+            taskId: taskId,
+            author: author || 'Anonymous',
+            content: content,
+            createdAt: new Date(),
+          };
+
+          return {
+            ...task,
+            comments: [...task.comments, newComment],
+          };
+        }
+        return task;
+      })
+    );
+
+    console.log('Comment added:', newComment);
+
+    return newComment;
+  }
+
+  /**
+   * Get comments for a task
+   */
+  getComments(taskId: string): Comment[] {
+    const task = this.getTaskById(taskId);
+    return task.comments;
+  }
+
+  /**
+   * Delete a comment from a task
+   */
+  deleteComment(taskId: string, commentId: string): boolean {
+    let deleted = false;
+
+    this.tasksSignal.update((tasks) =>
+      tasks.map((task) => {
+        if (task.id === taskId && task.comments) {
+          const filteredComments = task.comments.filter(c => c.id !== commentId);
+          deleted = filteredComments.length < task.comments.length;
+          return { ...task, comments: filteredComments };
+        }
+        return task;
+      })
+    );
+
+    return deleted;
+  }
+
+  /**
+   * Generate unique ID for comments
+   */
+  private generateCommentId(): string {
+    return `comment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**

@@ -226,4 +226,14 @@
       }
     }
   }
+
+  .comments-section {
+    padding: 24px;
+    background-color: #fafafa;
+
+    &:hover {
+      background-color: #f5f5f5;
+      transition: background-color 0.3s ease;
+    }
+  }
 }

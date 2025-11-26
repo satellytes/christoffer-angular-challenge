@@ -46,6 +46,41 @@ export interface Task {
    * Timestamp when the task was created
    */
   createdAt: Date;
+
+  /**
+   * Optional array of comments on the task
+   */
+  comments?: Comment[];
+}
+
+/**
+ * Comment interface representing a comment on a task
+ */
+export interface Comment {
+  /**
+   * Unique identifier for the comment
+   */
+  id: string;
+
+  /**
+   * ID of the task this comment belongs to
+   */
+  taskId: string;
+
+  /**
+   * Author of the comment
+   */
+  author: string;
+
+  /**
+   * Comment content/text
+   */
+  content: string;
+
+  /**
+   * Timestamp when the comment was created
+   */
+  createdAt: Date;
 }
 
 /**
